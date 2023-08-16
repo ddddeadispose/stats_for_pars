@@ -2,8 +2,10 @@ const express = require('express')
 const app = express()
 const cors = require('cors')
 const fs = require('fs')
+const http = require('http')
 const https = require('https')
 const PORT = process.env.PORT || 7453
+const PORTD = process.env.PORT || 7454
 
 const options = {
     key: fs.readFileSync('/etc/letsencrypt/live/this-casino.ru/privkey.pem'),
@@ -11,6 +13,7 @@ const options = {
 }
 
 const server = https.createServer(options, app)
+const httpServer = http.createServer(app)
 
 app.use(express.json())
 app.use(cors())
@@ -70,9 +73,11 @@ async function sumValuesByDate(date) {
     }
 }
 
-
-
 server.listen(PORT)
+httpServer.listen(PORTD, () => {
+    console.log(`http starts on port ${PORTD}`)
+})
+
 console.log(`App starts on ${PORT}`)
 
 app.get('/lists', async (req, res) => {
