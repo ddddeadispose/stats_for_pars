@@ -39,7 +39,7 @@ async function Save (problems, contracts, screenshots) {
     const NewLine = new Line({ date: DateNow, problems: problems, contracts: contracts, screenshots: screenshots})
 
     await NewLine.save()
-    .then(console.log('Line saved'))
+        .then(console.log('Line saved'))
 }
 
 async function findByDate (date) {
@@ -144,7 +144,7 @@ app.get('/time', async (req, res) => {
 
 app.post('/lists', async (req, res) => {
     const params = req.body
-    
+
     console.log('Запрос post на создание записи')
 
     Save(Number(params.problems),Number(params.contracts),Number(params.screenshots))
