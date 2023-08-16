@@ -3,7 +3,6 @@ const app = express()
 const cors = require('cors')
 const fs = require('fs')
 const https = require('https')
-const http = require('http')
 const PORT = process.env.PORT || 7453
 
 const options = {
@@ -11,8 +10,7 @@ const options = {
     cert: fs.readFileSync('/etc/letsencrypt/live/this-casino.ru/fullchain.pem')
 }
 
-const httpsServer  = https.createServer(options, app)
-const httpServer = http.createServer(app)
+const server = https.createServer(options, app)
 
 app.use(express.json())
 app.use(cors())
@@ -72,19 +70,10 @@ async function sumValuesByDate(date) {
     }
 }
 
-app.use((req, res, next) => {
-    if (!req.secure) {
-        return res.redirect(['https://', req.get('Host'), req.url].join(''))
-    }
-    next()
-})
 
-httpsServer.listen(PORT, () => {
-    console.log(`App starts on port ${PORT}`)
-})
-httpServer.listen(PORT, () => {
-    console.log(`App starts on port ${PORT}`)
-})
+
+server.listen(PORT)
+console.log(`App starts on ${PORT}`)
 
 app.get('/lists', async (req, res) => {
     console.log('Пришел запрос get на все записи')
